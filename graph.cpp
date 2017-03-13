@@ -1,24 +1,23 @@
 #include <opencv2/opencv.hpp>
 #include "graph.h"
-#include "DisjointSet.h"
 
-float diff(const Mat &image, int x1, int y1, int x2, int y2) {
-    Vec3f pix1 = image.at<Vec3f>(y1, x1);
-    Vec3f pix2 = image.at<Vec3f>(y2, x2);
+float diff(const cv::Mat &image, int x1, int y1, int x2, int y2) {
+    cv::Vec3f pix1 = image.at<cv::Vec3f>(y1, x1);
+    cv::Vec3f pix2 = image.at<cv::Vec3f>(y2, x2);
 
     // https://en.wikipedia.org/wiki/Euclidean_distance
     // https://en.wikipedia.org/wiki/Dot_product#Algebraic_definition
-    // http://docs.opencv.org/2.4.10/modules/core/doc/basic_structures.html#mat-dot
+    // http://docs.opencv.org/2.4.10/modules/core/doc/basic_structures.html#cv::Mat-dot
 
     return sqrt((pix1 - pix2).dot((pix1 - pix2)));
 }
 
-vector <Edge> build_graph(const Mat &image) {
+std::vector <Edge> build_graph(const cv::Mat &image) {
     int height = image.rows;
     int width = image.cols;
 
     int size = 4 * height * width;
-    vector <Edge> edges(static_cast<unsigned long>(size));
+    std::vector <Edge> edges(static_cast<unsigned long>(size));
 
     int num = 0;
     for (int y = 0; y < height; y++) {
@@ -59,7 +58,7 @@ vector <Edge> build_graph(const Mat &image) {
     return edges;
 }
 
-DisjointSet segment_graph(int num_vertices, vector <Edge> &edges, float c) {
+DisjointSet segment_graph(int num_vertices, std::vector <Edge> &edges, float c) {
     /* sort(edges.begin(), edges.end(), [](Edge &a, Edge &b) {
         return a.weight < b.weight;
     }); */
@@ -67,7 +66,7 @@ DisjointSet segment_graph(int num_vertices, vector <Edge> &edges, float c) {
     sort(edges.begin(), edges.end());
 
     DisjointSet forest = DisjointSet(edges.size());
-    vector<float> thresholds(static_cast<unsigned long>(num_vertices), c);
+    std::vector<float> thresholds(static_cast<unsigned long>(num_vertices), c);
 
     for (Edge &edge: edges) {
         int a = forest.find(edge.a);

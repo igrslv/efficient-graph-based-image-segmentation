@@ -1,21 +1,19 @@
 #include <opencv2/opencv.hpp>
 #include "EGBS.h"
-#include "graph.h"
-#include "DisjointSet.h"
 
 EGBS::EGBS() {
 
 }
 
-void EGBS::applySegmentation(Mat &image, int c, int min_size) {
+void EGBS::applySegmentation(cv::Mat &image, int c, int min_size) {
     int height = image.rows;
     int width = image.cols;
 
-    Mat smoothed(image);
+    cv::Mat smoothed(image);
     smoothed.convertTo(smoothed, CV_32FC3);
-    GaussianBlur(smoothed, smoothed, Size(5, 5), 0.5);
+    GaussianBlur(smoothed, smoothed, cv::Size(5, 5), 0.5);
 
-    vector <Edge> edges = build_graph(smoothed);
+    std::vector <Edge> edges = build_graph(smoothed);
     DisjointSet forest = segment_graph(height * width, edges, c);
 
     // process small components
@@ -31,13 +29,13 @@ void EGBS::applySegmentation(Mat &image, int c, int min_size) {
     recolor(image, forest);
 }
 
-void EGBS::recolor(Mat &image, DisjointSet &forest) {
+void EGBS::recolor(cv::Mat &image, DisjointSet &forest) {
     int height = image.rows;
     int width = image.cols;
 
     // calculate average colors for components
-    map<int, Vec3f> colors;
-    map<int, int> counts;
+    std::map<int, cv::Vec3f> colors;
+    std::map<int, int> counts;
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {

@@ -3,15 +3,13 @@
 
 #include<vector>
 
-using namespace std;
-
 typedef struct {
     int parent;
     int rank;
     int size;
 } Node;
 
-typedef vector <Node> Forest;
+typedef std::vector <Node> Forest;
 
 /**
  * Class representing Disjoint-set data structure (forest implementation).
