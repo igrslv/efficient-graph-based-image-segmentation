@@ -46,6 +46,6 @@ void DisjointSet::merge(int x, int y) {
     }
 }
 
-int DisjointSet::size(int x) {
+int DisjointSet::size(int x) const {
     return elements[x].size;
 }

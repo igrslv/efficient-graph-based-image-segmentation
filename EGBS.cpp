@@ -34,25 +34,24 @@ void EGBS::recolor(cv::Mat &image, DisjointSet &forest) {
     int width = image.cols;
 
     // calculate average colors for components
-    std::map<int, cv::Vec3f> colors;
-    std::map<int, int> counts;
+    std::unordered_map<int, Component> colors;
+    std::unordered_map<int, cv::Vec3f> colors_avg;
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             int comp = forest.find(y * width + x);
-            colors[comp] += image.at<cv::Vec3b>(y, x);
-            counts[comp]++;
+            colors[comp] += Component {1, image.at<cv::Vec3b>(y, x)};
         }
     }
 
-    for (auto itr : colors)
-        colors[itr.first] /= counts[itr.first];
+    for (auto itr: colors)
+        colors_avg[itr.first] = itr.second.getAverageColor();
 
     // apply average colors
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             int comp = forest.find(y * width + x);
-            image.at<cv::Vec3b>(y, x) = colors[comp];
+            image.at<cv::Vec3b>(y, x) = colors_avg[comp];
         }
     }
 }

@@ -25,7 +25,7 @@ public:
 
     void merge(int x, int y);
 
-    int size(int x);
+    int size(int x) const;
 
 private:
     Forest elements;
