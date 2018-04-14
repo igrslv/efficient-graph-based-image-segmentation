@@ -6,7 +6,7 @@ DisjointSet::DisjointSet() {
 
 DisjointSet::DisjointSet(int num_elements) {
     elements.clear();
-    elements.reserve(num_elements);
+    elements.resize(num_elements);
 
     for (int i = 0; i < num_elements; i++) {
         elements[i].parent = i;
