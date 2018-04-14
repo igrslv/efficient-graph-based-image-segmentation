@@ -1,5 +1,7 @@
 .idea/
 
+build/
+
 [Bb]in/*
 [Oo]bj/
 
